@@ -1,5 +1,5 @@
 import React from 'react'
-import { TODO } from './utils';
+import { Link } from 'react-router-dom'
 
 class Home extends React.Component {
   render() {
@@ -160,7 +160,9 @@ class Home extends React.Component {
         </div>
       </div>
       <div className="open-search">
-        <button onClick={() => TODO("this.setState({ showSearchPage: true })")}>Add a book</button>
+        <Link to="/search">
+          <button>Add a book</button>
+        </Link>
       </div>
     </div>
     )
