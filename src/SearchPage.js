@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
@@ -34,6 +35,7 @@ class SearchPage extends React.Component {
   }
 
   render() {
+    const { onMoveToShelf } = this.props
     const { books, error } = this.state
     return (
       <div className="search-books">
@@ -66,7 +68,7 @@ class SearchPage extends React.Component {
               {books.map( book => {
                 return (
                   <li key={book.id}>
-                    <Book book={book} />
+                    <Book book={book} onMoveToShelf={onMoveToShelf} />
                   </li>
                 )
               })}
@@ -76,6 +78,10 @@ class SearchPage extends React.Component {
       </div>
     )
   }
+}
+
+SearchPage.propTypes = {
+  onMoveToShelf: PropTypes.func.isRequired,
 }
 
 export default SearchPage

@@ -33,7 +33,9 @@ class BooksApp extends React.Component {
         }
 
         // remove book from old shelf
-        nextState[book.shelf] = nextState[book.shelf].filter( b => b.id !== book.id)
+        if ('shelf' in book) {
+          nextState[book.shelf] = nextState[book.shelf].filter( b => b.id !== book.id)
+        }
 
         // add book to new shelf
         if (shelf !== 'none') {

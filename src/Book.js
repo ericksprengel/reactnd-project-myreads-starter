@@ -25,7 +25,10 @@ class Book extends React.Component {
             {!book.imageLinks && book.title && book.title[0]}
           </div>
           <div className="book-shelf-changer">
-            <select onChange={(e) => onMoveToShelf(book, e.target.value)} value={book.shelf}>
+            <select
+              onChange={(e) => onMoveToShelf(book, e.target.value)}
+              value={'shelf' in book? book.shelf : 'none'}
+            >
               <option value="move" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
