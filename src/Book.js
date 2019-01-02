@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 class Book extends React.Component {
   render() {
-    const { book } = this.props
+    const { book, onMoveToShelf } = this.props
 
     const thumbnail = book.imageLinks ? book.imageLinks.thumbnail : '/bookcover.png'
     const bookCoverStyle = {
@@ -22,10 +22,10 @@ class Book extends React.Component {
           <div
             className="book-cover"
             style={bookCoverStyle}>
-            {!book.imageLinks && book.title[0]}
+            {!book.imageLinks && book.title && book.title[0]}
           </div>
           <div className="book-shelf-changer">
-            <select>
+            <select onChange={(e) => onMoveToShelf(book, e.target.value)} value={book.shelf}>
               <option value="move" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>

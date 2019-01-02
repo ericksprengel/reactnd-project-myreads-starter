@@ -1,28 +1,17 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import * as BooksAPI from './BooksAPI'
 import Bookshelf from './Bookshelf';
+import Book from './Book'
 
 class Home extends React.Component {
-  state = {
-    books: [],
-  }
-
-  componentDidMount() {
-    BooksAPI.getAll().then( books => {
-      console.log(books)
-      this.setState({
-        books,
-      })
-    })
-  }
-
   render() {
-    const { books } = this.state
-
-    const booksCurrentlyReading = books.filter( book => book.shelf === 'currentlyReading')
-    const booksWantToRead = books.filter( book => book.shelf === 'wantToRead')
-    const booksRead = books.filter( book => book.shelf === 'read')
+    const {
+      currentlyReading,
+      wantToRead,
+      read,
+      onMoveToShelf,
+    } = this.props
 
     return (
       <div className="list-books">
@@ -31,9 +20,9 @@ class Home extends React.Component {
       </div>
       <div className="list-books-content">
         <div>
-          <Bookshelf title="Currently Reading" books={booksCurrentlyReading} />
-          <Bookshelf title="Want to Read" books={booksWantToRead} />
-          <Bookshelf title="Read" books={booksRead} />
+          <Bookshelf title="Currently Reading" books={currentlyReading} onMoveToShelf={onMoveToShelf} />
+          <Bookshelf title="Want to Read" books={wantToRead} onMoveToShelf={onMoveToShelf} />
+          <Bookshelf title="Read" books={read} onMoveToShelf={onMoveToShelf} />
         </div>
       </div>
       <div className="open-search">
@@ -44,6 +33,13 @@ class Home extends React.Component {
     </div>
     )
   }
+}
+
+Home.propTypes = {
+  currentlyReading: PropTypes.arrayOf(Book.propTypes.book),
+  wantToRead: PropTypes.arrayOf(Book.propTypes.book),
+  read: PropTypes.arrayOf(Book.propTypes.book),
+  onMoveToShelf: PropTypes.func.isRequired,
 }
 
 export default Home

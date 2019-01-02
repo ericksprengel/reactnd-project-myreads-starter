@@ -4,7 +4,7 @@ import Book from './Book'
 
 class Bookshelf extends React.Component {
   render() {
-    const { title, books } = this.props
+    const { title, books, onMoveToShelf } = this.props
     return (
       <div className="bookshelf">
         <h2 className="bookshelf-title">{title}</h2>
@@ -13,7 +13,7 @@ class Bookshelf extends React.Component {
             {books.map( book => {
               return (
                 <li key={book.id}>
-                  <Book book={book} />
+                  <Book book={book} onMoveToShelf={onMoveToShelf} />
                 </li>
               )
             })}
