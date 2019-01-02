@@ -5,17 +5,25 @@ import PropTypes from 'prop-types'
 class Book extends React.Component {
   render() {
     const { book } = this.props
+
+    const thumbnail = book.imageLinks ? book.imageLinks.thumbnail : '/bookcover.png'
     const bookCoverStyle = {
       width: 128,
       height: 193,
-      backgroundImage: `url(${book.imageLinks.thumbnail})`,
+      backgroundImage: `url(${thumbnail})`,
+      fontSize: 65,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
     }
     return (
       <div className="book">
         <div className="book-top">
           <div
             className="book-cover"
-            style={bookCoverStyle}></div>
+            style={bookCoverStyle}>
+            {!book.imageLinks && book.title[0]}
+          </div>
           <div className="book-shelf-changer">
             <select>
               <option value="move" disabled>Move to...</option>
@@ -27,7 +35,7 @@ class Book extends React.Component {
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors.join(", ")}</div>
+        <div className="book-authors">{book.authors ? book.authors.join(", ") : ''}</div>
       </div>
     )
   }
@@ -38,7 +46,7 @@ Book.propTypes = {
     title: PropTypes.string.isRequired,
     authors: PropTypes.arrayOf(PropTypes.string),
     imageLinks: PropTypes.shape({
-      thumbnail: PropTypes.string.isRequired,
+      thumbnail: PropTypes.string,
     }),
   })
 }
