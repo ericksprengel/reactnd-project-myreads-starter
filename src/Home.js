@@ -7,12 +7,13 @@ import Book from './Book'
 class Home extends React.Component {
   render() {
     const {
-      currentlyReading,
-      wantToRead,
-      read,
+      books,
       onMoveToShelf,
     } = this.props
 
+    const currentlyReading = books.filter( book => book.shelf === 'currentlyReading')
+    const wantToRead = books.filter( book => book.shelf === 'wantToRead')
+    const read = books.filter( book => book.shelf === 'read')
     return (
       <div className="list-books">
       <div className="list-books-title">
@@ -36,9 +37,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
-  currentlyReading: PropTypes.arrayOf(Book.propTypes.book),
-  wantToRead: PropTypes.arrayOf(Book.propTypes.book),
-  read: PropTypes.arrayOf(Book.propTypes.book),
+  books: PropTypes.arrayOf(Book.propTypes.book).isRequired,
   onMoveToShelf: PropTypes.func.isRequired,
 }
 

@@ -7,17 +7,13 @@ import Home from './Home'
 
 class BooksApp extends React.Component {
   state = {
-    currentlyReading: [],
-    wantToRead: [],
-    read: [],
+    booksInMyBookshelves: [],
   }
 
   componentDidMount() {
     BooksAPI.getAll().then( books => {
       this.setState({
-        currentlyReading: books.filter( book => book.shelf === 'currentlyReading'),
-        wantToRead: books.filter( book => book.shelf === 'wantToRead'),
-        read: books.filter( book => book.shelf === 'read'),
+        booksInMyBookshelves: books,
       })
     })
   }
@@ -26,28 +22,27 @@ class BooksApp extends React.Component {
     BooksAPI.update(book, shelf).then( result => {
       this.setState((state, props) => {
         const newBook = { ...book, shelf: shelf }
-        const nextState = {
-          currentlyReading: state.currentlyReading,
-          wantToRead: state.wantToRead,
-          read: state.read,
+        let bookFound = false
+        const newArray = state.booksInMyBookshelves.map(b => {
+          if (b.id === book.id) {
+            bookFound = true
+            return newBook
+          } else {
+            return b
+          }
+        })
+        if (!bookFound) {
+          newArray.push(newBook)
         }
-
-        // remove book from old shelf
-        if ('shelf' in book) {
-          nextState[book.shelf] = nextState[book.shelf].filter( b => b.id !== book.id)
+        return {
+          booksInMyBookshelves: newArray,
         }
-
-        // add book to new shelf
-        if (shelf !== 'none') {
-          nextState[shelf] = [ ...nextState[shelf], newBook]
-        }
-        return nextState
       })
     })
   }
 
   render() {
-    const { currentlyReading, wantToRead, read } = this.state
+    const { booksInMyBookshelves } = this.state
     return (
       <Router>
         <div className="app">
@@ -57,9 +52,7 @@ class BooksApp extends React.Component {
             render={ props =>
               <Home
                 {...props}
-                currentlyReading={currentlyReading}
-                wantToRead={wantToRead}
-                read={read}
+                books={booksInMyBookshelves}
                 onMoveToShelf={this.onMoveToShelf}
               />
             }
@@ -67,7 +60,11 @@ class BooksApp extends React.Component {
           <Route
             path="/search"
             render={ props =>
-              <SearchPage {...props} onMoveToShelf={this.onMoveToShelf} />
+              <SearchPage
+                {...props}
+                booksInMyBookshelves={booksInMyBookshelves}
+                onMoveToShelf={this.onMoveToShelf}
+              />
             }
           />
         </div>

@@ -19,7 +19,6 @@ class SearchPage extends React.Component {
       return
     }
     BooksAPI.search(e.target.value).then( books => {
-      console.log("search result:",books)
       if (books.error) {
         this.setState({
           books: [],
@@ -35,8 +34,22 @@ class SearchPage extends React.Component {
   }
 
   render() {
-    const { onMoveToShelf } = this.props
+    const { booksInMyBookshelves, onMoveToShelf } = this.props
     const { books, error } = this.state
+
+    const myBooksById = {}
+    booksInMyBookshelves.forEach(book => {
+      myBooksById[book.id] = book
+    });
+
+    const booksWithShelf = books.map( book => {
+      if (book.id in myBooksById) {
+        return { ...book, shelf: myBooksById[book.id].shelf }
+      } else {
+        return book
+      }
+    })
+
     return (
       <div className="search-books">
         <div className="search-books-bar">
@@ -44,14 +57,6 @@ class SearchPage extends React.Component {
             <button className="close-search">Close</button>
           </Link>
           <div className="search-books-input-wrapper">
-            {/*
-              NOTES: The search from BooksAPI is limited to a particular set of search terms.
-              You can find these search terms here:
-              https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-              However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-              you don't find a specific author or title. Every search is limited by search terms.
-            */}
             <input
               type="text"
               placeholder="Search by title or author"
@@ -65,7 +70,7 @@ class SearchPage extends React.Component {
           {error && (<h2>{error}</h2>)}
           {!error && (
             <ol className="books-grid">
-              {books.map( book => {
+              {booksWithShelf.map( book => {
                 return (
                   <li key={book.id}>
                     <Book book={book} onMoveToShelf={onMoveToShelf} />
@@ -81,6 +86,7 @@ class SearchPage extends React.Component {
 }
 
 SearchPage.propTypes = {
+  booksInMyBookshelves: PropTypes.arrayOf(Book.propTypes.book).isRequired,
   onMoveToShelf: PropTypes.func.isRequired,
 }
 
