@@ -12,6 +12,7 @@ class SearchPage extends React.Component {
 
   handleChangeSearch = (e) => {
     if (!e.target.value) {
+      // clean search
       this.setState({
         books: [],
         error: false,
@@ -37,11 +38,15 @@ class SearchPage extends React.Component {
     const { booksInMyBookshelves, onMoveToShelf } = this.props
     const { books, error } = this.state
 
+    // index books in bookshelves to fast access
+    // while generating 'booksWithShelf'
     const myBooksById = {}
     booksInMyBookshelves.forEach(book => {
       myBooksById[book.id] = book
     });
 
+    // add shelf to book object if it's in any
+    // bookshelf
     const booksWithShelf = books.map( book => {
       if (book.id in myBooksById) {
         return { ...book, shelf: myBooksById[book.id].shelf }

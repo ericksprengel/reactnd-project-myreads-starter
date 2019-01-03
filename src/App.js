@@ -18,10 +18,17 @@ class BooksApp extends React.Component {
     })
   }
 
+  /*
+   *  update book shelf and keep booksInMyBookshelves
+   *  updated too.
+   */
   onMoveToShelf = (book, shelf) => {
     BooksAPI.update(book, shelf).then( result => {
-      this.setState((state, props) => {
+      this.setState((state) => {
         const newBook = { ...book, shelf: shelf }
+
+        // update or add book in booksInMyBookshelves
+        // according to the new shelf
         let bookFound = false
         const newArray = state.booksInMyBookshelves.map(b => {
           if (b.id === book.id) {
@@ -32,6 +39,8 @@ class BooksApp extends React.Component {
           }
         })
         if (!bookFound) {
+          // book is not included in booksInMyBookshelves
+          // add it :)
           newArray.push(newBook)
         }
         return {
